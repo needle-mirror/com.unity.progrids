@@ -18,7 +18,7 @@ namespace UnityEditor.ProGrids
 	/// Version information container that is comparable.
 	/// </summary>
 	[Serializable]
-	class VersionInfo : IEquatable<VersionInfo>, IComparable<VersionInfo>
+	class SemVer : IEquatable<SemVer>, IComparable<SemVer>
 	{
 		[SerializeField]
 		int m_Major = -1;
@@ -55,13 +55,13 @@ namespace UnityEditor.ProGrids
 
 		public const string DefaultStringFormat = "M.m.p-t.b";
 
-		public VersionInfo()
+		public SemVer()
 		{
 		}
 
-		public VersionInfo(string formatted, string date = null)
+		public SemVer(string formatted, string date = null)
 		{
-			VersionInfo parsed;
+			SemVer parsed;
 			m_RawString = formatted;
 			m_Date = date;
 
@@ -80,7 +80,7 @@ namespace UnityEditor.ProGrids
 			}
 		}
 
-		public VersionInfo(int major, int minor, int patch, int build = 0, VersionType type = VersionType.Development, string date = "", string metadata = "")
+		public SemVer(int major, int minor, int patch, int build = 0, VersionType type = VersionType.Development, string date = "", string metadata = "")
 		{
 			m_Major = major;
 			m_Minor = minor;
@@ -101,7 +101,7 @@ namespace UnityEditor.ProGrids
 
 		public override bool Equals(object o)
 		{
-			return o is VersionInfo && this.Equals((VersionInfo) o);
+			return o is SemVer && this.Equals((SemVer) o);
 		}
 
 		public override int GetHashCode()
@@ -127,7 +127,7 @@ namespace UnityEditor.ProGrids
 			return hash;
 		}
 
-		public bool Equals(VersionInfo version)
+		public bool Equals(SemVer version)
 		{
 			if(IsValid() != version.IsValid())
 				return false;
@@ -149,7 +149,7 @@ namespace UnityEditor.ProGrids
 			}
 		}
 
-		public int CompareTo(VersionInfo version)
+		public int CompareTo(SemVer version)
 		{
 			const int GREATER = 1;
 			const int LESS = -1;
@@ -250,9 +250,9 @@ namespace UnityEditor.ProGrids
 		/// <param name="input"></param>
 		/// <param name="version"></param>
 		/// <returns></returns>
-		public static bool TryGetVersionInfo(string input, out VersionInfo version)
+		public static bool TryGetVersionInfo(string input, out SemVer version)
 		{
-			version = new VersionInfo();
+			version = new SemVer();
 			version.m_RawString = input;
 			bool ret = false;
 
