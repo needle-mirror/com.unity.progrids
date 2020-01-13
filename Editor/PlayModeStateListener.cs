@@ -36,7 +36,7 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Registered to EditorApplication.onPlaymodeStateChanged
+		/// Called when the PlayMode State changes
 		/// </summary>
 		static void OnPlayModeStateChanged()
 		{

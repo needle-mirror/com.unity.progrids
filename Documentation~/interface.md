@@ -2,135 +2,78 @@
 
 # The Interface
 
-![interface](images/interface.png)
+![ProGrids toolbar in Perspective mode (left) and Orthographic mode (right)](images/interface.png) 
 
-The ProGrids Panel displays the following buttons and options:
+![A](images/LetterA.png) [Snap Settings](snapping.md). Set the size of the grid's snapping increment. 
 
-* **(1)** [Snap Size and Settings](#settings)
-* **(2)** [Grid Visibility](#grid-vis)
-* **(3)** [Snapping Enabled](#snap)
-* **(4)** [Push to Grid](#push)
-* **(5)** [Follow Grid](#follow)
-* **(6)** [Set Grid Plane X](#gridX)
-* **(7)** [Set Grid Plane Y](#gridY)
-* **(8)** [Set Grid Plane Z](#gridZ)
-* **(9)** [Perspective Grid](#perspective)
+![B](images/LetterB.png) [Grid Visibility](#grid-vis). Toggle whether to display or hide gridlines in the Scene view.
 
-In addition, there are settings for [Angle Visibility](#angle-vis) and [Keyboard Shortcuts](#hotkeys).
+![C](images/LetterC.png) [Snapping Enabled](#snap). Toggle whether to snap objects to the grid on or off. 
 
+![D](images/LetterD.png) [Push to Grid](#push). Snap all selected object(s) to the grid.  
 
+![E](images/LetterE.png) [Follow Grid](#follow). Lock the perspective grid in place. 
 
-<a name="settings"></a>
+![F](images/LetterF.png) [Set Grid Planes](grids.md). You can choose to display the grid for a single axis (**X**, **Y**, **Z**) or all three at once (the **Perspective Grid**). These buttons are only available when the Scene view is set to the [perspective mode](https://docs.unity3d.com/Manual/SceneViewNavigation.html).
 
+![G](images/LetterG.png) [Angle Visibility](#angle-vis). Toggle the visibility of the angle guides. This button is only available when the Scene view is set to the [orthographic mode](https://docs.unity3d.com/Manual/SceneViewNavigation.html).
 
-## ![gui_snap-size](images/icons/snap-size.png) Snap Size and Settings 
+> **TIP**: You can use [Keyboard Shortcuts](hotkeys.md) to change these settings quickly.
 
-Click this button to open the snap settings window, where-in you can set snap increment and other settings.
-
-Units are in meters by default, or you can choose inches, feet, etc. See the [Preferences](preferences.md) section for more details.
-
-> ***Hint:*** Use the **+** and **-** keys to quickly change the Snap Size
-
-![scene-settings](images/scene-settings.png)
-
-| **Property** | **Description** |
-|:--|:--|
-| **Snap Value** | Set the increment to snap objects to in world coordinates |
-| **Major Line Increment** | How many lines to show between highlighted lines |
-| **Snap On Scale** | When enabled, applies snapping to object scale values |
-| **Snap as Group** | When enabled, multiple selected objects retain their relative positions to one another when moving |
-| **Grid Units** | Defines the unit of measurement that snap value is measured in |
-| **Angle** | When in orthographic views an additional line is drawn at this angle |
-| **Predictive Grid** | When enabled, ProGrids will automatically set the rendering grid plane according to object movement |
 
 
 
 <a name="grid-vis"></a>
 
-## ![gui_vis-on](images/icons/grid-vis.png) Grid Visibility 
+## ![gui_vis-on](images/icons/grid-vis.png) Grid Visibility
 
-Toggle the grid visuals on or off.
+Use this button to switch between whether the grid is visible or not. 
 
-Note that objects will still snap with grid visibility toggled off.
+When you enable or disable this setting it only affects the visibility of the grid. Objects still snap to the grid even when you disable grid visibility.
 
 
 
 <a name="snap"></a>
 
-## ![gui_snap-on](images/icons/snap-enabled.png) Snapping Enabled 
+## ![gui_snap-on](images/icons/snap-enabled.png) Snapping Enabled
 
-Enable or disable snapping to the grid when moving objects.
+Use this button to enable or disable snapping to the grid when you move objects. 
+
+Make sure your [Gizmo handle](https://docs.unity3d.com/Manual/PositioningGameObjects.html#GizmoHandlePositions) is set to **Pivot**. When you use snapping with the handle position set to **Center** it may produce unexpected behavior.
 
 
 
 <a name="push"></a>
 
-## ![gui_push-to-grid](images/icons/push-to-grid.png) Push to Grid 
+## ![gui_push-to-grid](images/icons/push-to-grid.png) Push to Grid
 
-Move all selected objects to on-grid positions, on each axis.
+Use this button to move all selected objects to positions on the grid, on all axes.  
+
+This is useful when you enable to snapping to the grid to adjust objects in your Scene that you created before.
 
 
 
 <a name="follow"></a>
 
-## ![lock grid](images/icons/grid-lock.png) Follow Grid 
+## ![lock grid](images/icons/grid-lock.png) Follow Grid
 
-When enabled the grid will automatically move position itself at the origin of the current selection. When disabled (or "locked") the grid stays anchored at it's position.
+Use this button to lock the grid on its current axis. For example, if the Y grid is visible, the lock determines if it moves up or down with the object:
 
-While **locked** you can "nudge" the X, Y, or Z grid along it's axis by using the bracket (**[ ]**) keys.
+* When you disable **Follow Grid**, the grid is locked, which means the grid stays in place on the Y axis.
+* When you enable **Follow Grid**, the grid is unlocked, which means the grid matches the selected object's Y position as closely as possible.
 
-
-
-<a name="gridX"></a>
-
-## ![Set grid plane](images/icons/grid-x.png) Set Grid Plane X 
-
-Set the grid to render on the **X** axis (facing to the left/right).
-
-
-
-<a name="gridY"></a>
-
-## ![set grid plane](images/icons/grid-y.png) Set Grid Plane Y 
-
-Set the grid to render on the **Y** axis (facing up/down).
-
-
-
-<a name="gridZ"></a>
-
-## ![set grid plane](images/icons/grid-z.png) Set Grid Plane Z
-
-Set the grid to render on the **Z** axis (facing forwards/backwards).
-
-
-
-<a name="perpective"></a>
-
-## ![perspective grid](images/icons/perspective.png) Perspective Grid
-
-Renders a grid with all 3 axes.
-
-![grid-views](images/gridViews_600px.png)
+> **TIP**: If you disable  **Follow Grid**, you can "nudge" the X, Y, or Z grid along its axis by using the bracket (**[ ]**) [keyboard shortcuts](hotkeys.md).
 
 
 
 <a name="angle-vis"></a>
 
-## ![angle vis](images/icons/angle-vis.png) Angle Visibility
+## ![Angle Visibility](images/icons/angle-vis.png) Angle Visibility
 
-Toggle the visibility of the angle guides when in orthographic scene rendering mode.
+Use this button to toggle the visibility of the angle guides when the Scene view is set to [orthographic mode](https://docs.unity3d.com/Manual/SceneViewNavigation.html).
 
+![Orthographic lines appear when angle visibility is enabled](images/angle-vis.png) 
 
+For example, you can see two diagonal lines appearing in this image in addition to the standard ProGrids horizontal and vertical lines. 
 
-<a name="hotkeys"></a>
-
-## Keyboard Shortcuts
-
-Single key shortcuts are enabled when the scene view is in focus.
-
-**+** *or* **-** : Hit the "plus" or "minus" key to make the grid larger/smaller by one increment (see "Customizing ProGrids")
-
-**[** *or* **]** : Use the bracket keys to nudge the X, Y, or Z grids perpendicular to their facing direction, by one increment.
-
-**S** : Hold **S** to swap between Axis Constraint Modes (see "Axis Constraints", above)
+The default angle of these lines is 45 degrees. To change the default angle, set the [Angle](#ortho-angle) property in the [Snap Settings](snapping.md).

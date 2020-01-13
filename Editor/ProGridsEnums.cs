@@ -30,11 +30,11 @@ namespace UnityEditor.ProGrids
 	static class EnumExtension
 	{
 		/// <summary>
-		/// Multiplies a Vector3 using the inverse value of an axis (eg, Axis.Y becomes Vector3(1, 0, 1) )
+		/// Multiplies a Vector3 using the inverse value of an axis (for example, Axis.Y becomes Vector3(1, 0, 1) ).
 		/// </summary>
-		/// <param name="v"></param>
-		/// <param name="axis"></param>
-		/// <returns></returns>
+		/// <param name="v">The vector to modify</param>
+		/// <param name="axis">Which axis to use</param>
+		/// <returns>The result as a vector</returns>
 		internal static Vector3 InverseAxisMask(Vector3 v, Axis axis)
 		{
 			switch(axis)

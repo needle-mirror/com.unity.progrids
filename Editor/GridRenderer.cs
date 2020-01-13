@@ -1,7 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEditor;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Object = UnityEngine.Object;
@@ -32,10 +29,10 @@ namespace UnityEditor.ProGrids
 		public static int majorLineIncrement = 10;
 
 		/// <summary>
-		/// Destroy any existing render objects, then initialize new ones.
+		/// Destroys any existing render objects, then initializes new ones.
 		/// </summary>
 		/// <returns>
-		/// True if instance resources were successfully initialized, false if not.
+		/// True if instance resources were successfully initialized; false if not.
 		/// </returns>
 		public static bool Init()
 		{
@@ -122,14 +119,14 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Returns the distance this grid is drawing
+		/// Returns the distance this grid draws.
 		/// </summary>
-		/// <param name="cam"></param>
-		/// <param name="pivot"></param>
-		/// <param name="tangent"></param>
-		/// <param name="bitangent"></param>
-		/// <param name="snapValue"></param>
-		/// <param name="color"></param>
+		/// <param name="cam">The Camera used to calculate the distance</param>
+		/// <param name="pivot">The pivot point used to calculate the distance</param>
+		/// <param name="tangent">Tangent</param>
+		/// <param name="bitangent">Bitangent</param>
+		/// <param name="snapValue">The snap value </param>
+		/// <param name="color">The grid color to use </param>
 		/// <returns></returns>
 		internal static float SetPerspective(Camera cam, Vector3 pivot, Vector3 tangent, Vector3 bitangent, float snapValue, Color color)
 		{
@@ -419,15 +416,14 @@ namespace UnityEditor.ProGrids
 		/// <summary>
 		/// Draws a plane grid using pivot point, the right and forward directions, and how far each direction should extend
 		/// </summary>
-		/// <param name="cam"></param>
-		/// <param name="pivot"></param>
-		/// <param name="tan"></param>
-		/// <param name="bitan"></param>
-		/// <param name="increment"></param>
-		/// <param name="iterations"></param>
-		/// <param name="div"></param>
-		/// <param name="secondary"></param>
-		/// <param name="alphaBump"></param>
+		/// <param name="cam">Camera to use for reference</param>
+		/// <param name="pivot">Pivot to use</param>
+		/// <param name="tan">Tangent</param>
+		/// <param name="bitan">Bitangent</param>
+		/// <param name="increment">Increment</param>
+		/// <param name="iterations">Iterations</param>
+		/// <param name="div">Not used</param>
+		/// <param name="secondary">Color</param>
 		static void RebuildPlane(Camera cam, Vector3 pivot, Vector3 tan, Vector3 bitan, float increment, int iterations, int div, Color secondary)
 		{
 			Color primary = secondary;
@@ -497,14 +493,14 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Returns the distance from pivot to frustum plane in the order of float[] { tan, bitan, -tan, -bitan }
+		/// Returns the distance from the pivot to the frustum plane in the order of float[] { tan, bitan, -tan, -bitan }
 		/// </summary>
-		/// <param name="cam"></param>
-		/// <param name="pivot"></param>
-		/// <param name="tan"></param>
-		/// <param name="bitan"></param>
-		/// <param name="minDist"></param>
-		/// <returns></returns>
+		/// <param name="cam">Camera to use as reference</param>
+		/// <param name="pivot">Pivot point to use as reference</param>
+		/// <param name="tan">Tangent</param>
+		/// <param name="bitan">Bitangent</param>
+		/// <param name="minDist">Minimum distance</paramz>
+		/// <returns>The distance from the pivot to the frustrum plane</returns>
 		static float[] GetDistanceToFrustumPlanes(Camera cam, Vector3 pivot, Vector3 tan, Vector3 bitan, float minDist)
 		{
 			Ray[] rays = new Ray[4]

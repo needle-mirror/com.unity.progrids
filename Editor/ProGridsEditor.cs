@@ -1,9 +1,16 @@
+#if UNITY_2019_1_OR_NEWER
+#define SHORTCUT_MANAGER
+#endif
+
 using System;
 using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+#if SHORTCUT_MANAGER
+using UnityEditor.ShortcutManagement;
+#endif
 
 namespace UnityEditor.ProGrids
 {
@@ -11,7 +18,7 @@ namespace UnityEditor.ProGrids
 	static class ProGridsInitializer
 	{
 		/// <summary>
-		/// When opening Unity, remember whether or not ProGrids was open when Unity was shut down last.
+		/// Remembers whether or not ProGrids was open when Unity was shut down last. This happens when Unity opens.
 		/// </summary>
 		static ProGridsInitializer()
 		{
@@ -40,21 +47,64 @@ namespace UnityEditor.ProGrids
 		bool m_PredictiveGrid = true;
 		bool m_GuiResourcesInitialized;
 
+
+		float m_AlphaBump = .25f;
+		Transform m_LastActiveTransform;
+		Vector3 m_LastPosition = Vector3.zero;
+		Vector3 m_LastScale = Vector3.one;
+
+		bool m_savedFullGrid;
+		Axis m_savedAxis;
+
+#if SHORTCUT_MANAGER
+
+		[ClutchShortcut("ProGrids/Toggle Snap on All Axes", typeof(SceneView), KeyCode.S)]
+		static void ToggleSnapOnAllAxes(ShortcutArguments args)
+		{
+			if (!IsEnabled())
+				return;
+
+			switch (args.stage)
+			{
+				case ShortcutStage.Begin:
+					s_Instance.m_ToggleAxisConstraint = true;
+					break;
+
+				case ShortcutStage.End:
+					s_Instance.m_ToggleAxisConstraint = false;
+					break;
+			}
+		}
+
+		[ClutchShortcut("ProGrids/Disable Snap", KeyCode.D)]
+		static void TempDisableSnap(ShortcutArguments args)
+		{
+			if (!IsEnabled())
+				return;
+
+			switch (args.stage)
+			{
+				case ShortcutStage.Begin:
+					s_Instance.m_ToggleTempSnap = true;
+					break;
+
+				case ShortcutStage.End:
+					s_Instance.m_ToggleTempSnap = false;
+					break;
+			}
+		}
+#else
+		KeyCode m_AxisConstraintKey = KeyCode.S;
+		KeyCode m_TempDisableKey = KeyCode.D;
+
 		KeyCode m_IncreaseGridSizeShortcut = KeyCode.Equals;
 		KeyCode m_DecreaseGridSizeShortcut = KeyCode.Minus;
 		KeyCode m_NudgePerspectiveBackwardShortcut = KeyCode.LeftBracket;
 		KeyCode m_NudgePerspectiveForwardShortcut = KeyCode.RightBracket;
 		KeyCode m_ResetGridShortcutModifiers = KeyCode.Alpha0;
 		KeyCode m_CyclePerspectiveShortcut = KeyCode.Backslash;
+#endif
 
-		float m_AlphaBump = .25f;
-
-		Transform m_LastActiveTransform;
-		Vector3 m_LastPosition = Vector3.zero;
-		Vector3 m_LastScale = Vector3.one;
-
-		const KeyCode k_AxisConstraintKey = KeyCode.S;
-		const KeyCode k_TempDisableKey = KeyCode.D;
 		bool m_ToggleAxisConstraint = false;
 		bool m_ToggleTempSnap = false;
 		Vector3 m_Pivot = Vector3.zero;
@@ -160,7 +210,7 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// The snap value as set by the user interface. This is not multiplied by the grid unit or -+ key modifiers.
+		/// Stores the snap value as set by the user interface. This is not multiplied by the grid unit or -+ key modifiers.
 		/// </summary>
 		/// <remarks>
 		/// To get the actual value used to snap objects in the scene, use SnapValueInUnityUnits.
@@ -207,7 +257,7 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// The value that positions are rounded to when snapping in the editor. This is the result of:
+		/// Stores the value that positions are rounded to when snapping in the editor. This is the result of:
 		/// `SnapValueInGridUnits * GridUnit * BracketKeyMultiplier`
 		/// </summary>
 		internal float SnapValueInUnityUnits
@@ -241,6 +291,9 @@ namespace UnityEditor.ProGrids
 
 #region Menu Actions
 
+#if SHORTCUT_MANAGER
+		[Shortcut("ProGrids/Increase Grid Size", typeof(SceneView), KeyCode.Equals)]
+#endif
 		internal static void IncreaseGridSize()
 		{
 			if (!IsEnabled())
@@ -252,6 +305,9 @@ namespace UnityEditor.ProGrids
 			DoGridRepaint();
 		}
 
+#if SHORTCUT_MANAGER
+		[Shortcut("ProGrids/Decrease Grid Size", typeof(SceneView), KeyCode.Minus)]
+#endif
 		internal static void DecreaseGridSize()
 		{
 			if (!IsEnabled())
@@ -261,6 +317,18 @@ namespace UnityEditor.ProGrids
 				settings.SnapMultiplier /= 2;
 			EditorPrefs.SetString(PreferenceKeys.SnapSettings, JsonUtility.ToJson(settings));
 			DoGridRepaint();
+		}
+
+#if SHORTCUT_MANAGER
+		[Shortcut("ProGrids/Reset Grid", typeof(SceneView), KeyCode.Alpha0)]
+#endif
+		internal static void ResetGrid()
+		{
+			if (!IsEnabled())
+				return;
+
+			MenuNudgePerspectiveReset();
+			ResetGridSize();
 		}
 
 		internal static void ResetGridSize()
@@ -273,6 +341,9 @@ namespace UnityEditor.ProGrids
 			DoGridRepaint();
 		}
 
+#if SHORTCUT_MANAGER
+		[Shortcut("ProGrids/Nudge Perspective Backward", typeof(SceneView), KeyCode.LeftBracket)]
+#endif
 		internal static void MenuNudgePerspectiveBackward()
 		{
 			if (!IsEnabled() || !Instance.m_GridIsLocked)
@@ -281,6 +352,9 @@ namespace UnityEditor.ProGrids
 			DoGridRepaint();
 		}
 
+#if SHORTCUT_MANAGER
+		[Shortcut("ProGrids/Nudge Perspective Forward", typeof(SceneView), KeyCode.RightBracket)]
+#endif
 		internal static void MenuNudgePerspectiveForward()
 		{
 			if (!IsEnabled() || !Instance.m_GridIsLocked)
@@ -298,6 +372,9 @@ namespace UnityEditor.ProGrids
 			DoGridRepaint();
 		}
 
+#if SHORTCUT_MANAGER
+		[Shortcut("ProGrids/Cycle Perspective", typeof(SceneView), KeyCode.Backslash)]
+#endif
 		internal static void CyclePerspective()
 		{
 			if (!IsEnabled())
@@ -422,7 +499,7 @@ namespace UnityEditor.ProGrids
 		void RegisterDelegates()
 		{
 			UnregisterDelegates();
-			
+
 #if UNITY_2019_1_OR_NEWER
 			SceneView.duringSceneGui += OnSceneGUI;
 			SceneView.duringSceneGui += DrawSceneGrid;
@@ -467,6 +544,14 @@ namespace UnityEditor.ProGrids
 
 			m_SnapMethod = (SnapMethod) EditorPrefs.GetInt(PreferenceKeys.SnapMethod, (int) Defaults.SnapMethod);
 
+#if !SHORTCUT_MANAGER
+
+			m_AxisConstraintKey = EditorPrefs.HasKey(PreferenceKeys.ToggleAxisConstraint)
+				? (KeyCode)EditorPrefs.GetInt(PreferenceKeys.ToggleAxisConstraint)
+				: KeyCode.S;
+			m_TempDisableKey = EditorPrefs.HasKey(PreferenceKeys.ToggleDisable)
+				? (KeyCode)EditorPrefs.GetInt(PreferenceKeys.ToggleDisable)
+				: KeyCode.D;
 			m_IncreaseGridSizeShortcut = EditorPrefs.HasKey(PreferenceKeys.IncreaseGridSize)
 				? (KeyCode)EditorPrefs.GetInt(PreferenceKeys.IncreaseGridSize)
 				: KeyCode.Equals;
@@ -485,6 +570,7 @@ namespace UnityEditor.ProGrids
 			m_CyclePerspectiveShortcut = EditorPrefs.HasKey(PreferenceKeys.CyclePerspective)
 				? (KeyCode)EditorPrefs.GetInt(PreferenceKeys.CyclePerspective)
 				: KeyCode.Backslash;
+#endif
 
 			m_GridIsLocked = EditorPrefs.GetBool(PreferenceKeys.LockGrid);
 
@@ -531,11 +617,11 @@ namespace UnityEditor.ProGrids
 
 		void OnSceneGUI(SceneView view)
 		{
-			Handles.EndGUI();
-
 			var currentEvent = Event.current;
 
+#if !SHORTCUT_MANAGER
 			HandleSingleKeyShortcuts(currentEvent);
+#endif
 
 			if (view == SceneView.lastActiveSceneView)
 			{
@@ -602,11 +688,20 @@ namespace UnityEditor.ProGrids
 			{
 				m_DoGridRepaint = true;
 
-				if (gridIsOrthographic && !wasOrtho || gridIsOrthographic != menuIsOrtho)
-					OnSceneBecameOrtho(view == SceneView.lastActiveSceneView);
-
-				if (!gridIsOrthographic && wasOrtho)
-					OnSceneBecamePersp(view == SceneView.lastActiveSceneView);
+				if (view == SceneView.lastActiveSceneView && gridIsOrthographic != menuIsOrtho)
+				{
+					if (gridIsOrthographic)
+					{
+						m_savedAxis = (Axis)EditorPrefs.GetInt(PreferenceKeys.GridAxis);
+						m_savedFullGrid = EditorPrefs.GetBool(PreferenceKeys.PerspGrid);
+					}
+					else
+					{
+						SetRenderPlane(m_savedAxis);
+						FullGridEnabled = m_savedFullGrid;
+					}
+					SetMenuIsExtended(menuOpen);
+				}
 			}
 
 			if (gridIsOrthographic)
@@ -741,6 +836,7 @@ namespace UnityEditor.ProGrids
 			m_LastScale = m_LastActiveTransform.localScale;
 		}
 
+#if !SHORTCUT_MANAGER
 		void HandleSingleKeyShortcuts(Event currentEvent)
 		{
 			if (!currentEvent.isKey
@@ -753,9 +849,9 @@ namespace UnityEditor.ProGrids
 
 			if (currentEvent.type == EventType.KeyDown)
 			{
-				if (keyCode == k_TempDisableKey)
+				if (keyCode == m_TempDisableKey)
 					m_ToggleTempSnap = true;
-				else if (keyCode == k_AxisConstraintKey)
+				else if (keyCode == m_AxisConstraintKey)
 					m_ToggleAxisConstraint = true;
 				else
 					used = false;
@@ -807,6 +903,7 @@ namespace UnityEditor.ProGrids
 			if (used)
 				currentEvent.Use();
 		}
+#endif
 
 		void OnSelectionChange()
 		{
@@ -824,19 +921,6 @@ namespace UnityEditor.ProGrids
 				m_LastScale = m_LastActiveTransform.localScale;
 			}
 		}
-
-		void OnSceneBecameOrtho(bool isCurrentView)
-		{
-			if (isCurrentView && gridIsOrthographic != menuIsOrtho)
-				SetMenuIsExtended(menuOpen);
-		}
-
-		void OnSceneBecamePersp(bool isCurrentView)
-		{
-			if (isCurrentView && gridIsOrthographic != menuIsOrtho)
-				SetMenuIsExtended(menuOpen);
-		}
-
 #endregion
 
 #region SETTINGS
@@ -893,11 +977,14 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Get the value used for snapping objects in Unity units. This is equal to `GridUnit * SnapValue * Multiplier`
+		/// Retrieves the value used for snapping objects in Unity units. This is equal to `GridUnit * SnapValue * Multiplier`
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>The value used for snapping objects in Unity units</returns>
 		internal float GetSnapValue() { return SnapValueInUnityUnits; }
 
+		/// <summary>
+		/// Gets of useAxisConstraints, accounting for the shortcut key toggle. 
+		/// </summary>
 		/// <returns>the value of useAxisConstraints, accounting for the shortcut key toggle.</returns>
 		/// <remarks>Used by ProBuilder.</remarks>
 		public static bool UseAxisConstraints()
@@ -906,16 +993,16 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Get the origin point of the grid. If no instance is active, zero is returned.
+		/// Gets the origin point of the grid. If no instance is active, this method returns zero.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>The origin point of the grid or zero if no instance is active.</returns>
 		public static Vector3 GetPivot()
 		{
 			return s_Instance == null ? Vector3.zero : Snapping.Round(s_Instance.m_Pivot, s_Instance.GetSnapValue());
 		}
 
 		/// <summary>
-		/// Get the ProGrids snap value in Unity units.
+		/// Gets the ProGrids snap value in Unity units.
 		/// </summary>
 		/// <returns>The current snap value.</returns>
 		/// <remarks>Used by ProBuilder.</remarks>
@@ -925,9 +1012,9 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Check if snapping is enabled by ProGrids.
+		/// Checks whether snapping is enabled by ProGrids.
 		/// </summary>
-		/// <returns>True if snapping is enabled, false otherwise.</returns>
+		/// <returns>True if snapping is enabled; false otherwise.</returns>
 		/// <remarks>Used by ProBuilder.</remarks>
 		public static bool SnapEnabled()
 		{
@@ -935,7 +1022,7 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Register a callback to be raised when the ProGrids "Push to Grid" button is pressed.
+		/// Registers a callback to be raised when the ProGrids "Push to Grid" button is pressed.
 		/// </summary>
 		/// <param name="listener">
 		/// A delegate accepting a float value (corresponding to the snap increment).
@@ -946,7 +1033,7 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Remove a delegate registered via AddPushToGridListener.
+		/// Removes a delegate registered via AddPushToGridListener.
 		/// </summary>
 		/// <param name="listener"></param>
 		public static void RemovePushToGridListener(System.Action<float> listener)
@@ -955,7 +1042,7 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Register a delegate to be called when the ProGrids toolbar is opened or closed.
+		/// Registers a delegate to be called when the ProGrids toolbar is opened or closed.
 		/// </summary>
 		/// <param name="listener">True when toolbar is opening, false if closing.</param>
 		/// <remarks>Used by ProBuilder.</remarks>
@@ -965,7 +1052,7 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Remove a delegate subscribed via AddToolbarEventSubscriber.
+		/// Removes a delegate subscribed via AddToolbarEventSubscriber.
 		/// </summary>
 		/// <param name="listener"></param>
 		/// <remarks>Used by ProBuilder.</remarks>
@@ -975,9 +1062,9 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Is ProGrids open?
+		/// Tests whether or not ProGrids is open.
 		/// </summary>
-		/// <returns>True if ProGrids is open in the scene, false if not.</returns>
+		/// <returns>True if ProGrids is open in the scene; false if not.</returns>
 		/// <remarks>Used by ProBuilder.</remarks>
 		public static bool SceneToolbarActive()
 		{
@@ -985,9 +1072,9 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// True if ProGrids is open and the toolbar is in an extended state.
+		/// Checks to see if ProGrids is open and the toolbar is in an extended state.
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>True if ProGrids is open and the toolbar is in an extended state.</returns>
 		/// <remarks>Used by ProBuilder.</remarks>
 		public static bool SceneToolbarIsExtended()
 		{
@@ -1006,6 +1093,9 @@ namespace UnityEditor.ProGrids
 				listener(snapValue);
 		}
 
+		/// <summary>
+		/// Called when the user moves a handle on a ProBuilder object.
+		/// </summary>
 		/// <remarks>Used by ProBuilder.</remarks>
 		static void OnHandleMove(Vector3 worldDirection)
 		{

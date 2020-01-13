@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEditor.SettingsManagement;
 
 namespace UnityEditor.ProGrids
 {
@@ -25,8 +26,8 @@ namespace UnityEditor.ProGrids
 
 		static bool s_PrefsLoaded = false;
 
-		[PreferenceItem("ProGrids")]
-		public static void PreferencesGUI()
+		[UserSettingBlock("ProGrids")]
+		public static void PreferencesGUI(string searchContext)
 		{
 			if (!s_PrefsLoaded)
 				s_PrefsLoaded = LoadPreferences();

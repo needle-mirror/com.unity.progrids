@@ -1,4 +1,6 @@
 ﻿using UnityEditor;
+using UnityEditor.ShortcutManagement;
+using UnityEngine;
 
 namespace UnityEditor.ProGrids
 {

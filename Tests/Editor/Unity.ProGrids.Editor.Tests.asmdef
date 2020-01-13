@@ -1,10 +1,14 @@
 {
-    "name": "Unity.ProGrids.Editor",
+    "name": "Unity.ProGrids.Editor.Tests",
     "references": [
+        "Unity.ProGrids.Editor",
         "Unity.ProGrids",
+        "Unity.ProGrids.Runtime.Tests",
         "Unity.Settings.Editor"
     ],
-    "optionalUnityReferences": [],
+	"optionalUnityReferences": [
+        "TestAssemblies"
+    ],
     "includePlatforms": [
         "Editor"
     ],
@@ -13,6 +17,5 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
-    "versionDefines": []
+    "defineConstraints": []
 }

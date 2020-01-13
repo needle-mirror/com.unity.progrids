@@ -15,7 +15,7 @@ namespace UnityEditor.ProGrids
 	}
 
 	/// <summary>
-	/// Version information container that is comparable.
+	/// Represents a version information container that you can compare to another SemVer object.
 	/// </summary>
 	[Serializable]
 	class SemVer : IEquatable<SemVer>, IComparable<SemVer>
@@ -179,23 +179,24 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Simple formatting for a version info. The following characters are available:
-		/// 'M' Major
-		/// 'm' Minor
-		/// 'p' Patch
-		/// 'b' Build
-		/// 't' Lowercase single type (f, d, b, or p)
-		/// 'T' Type
-		/// 'd' Date
-		/// 'D' Metadata
-		/// 'R' The input string used to construct this VersionInfo.
-		/// Escape characters with '\'.
+		/// Formats a string containing version information using simple formatting. 
+		/// The following characters are available:<br/>
+		/// 'M' Major<br/>
+		/// 'm' Minor<br/>
+		/// 'p' Patch<br/>
+		/// 'b' Build<br/>
+		/// 't' Lowercase single type (f, d, b, or p)<br/>
+		/// 'T' Type<br/>
+		/// 'd' Date<br/>
+		/// 'D' Metadata<br/>
+		/// 'R' The input string used to construct this VersionInfo.<br/>
+		/// Escape characters with '\\'.
 		/// </summary>
 		/// <example>
 		/// ToString("\buil\d: T:M.m.p") returns "build: Final:2.10.1"
 		/// </example>
-		/// <param name="format"></param>
-		/// <returns></returns>
+		/// <param name="format">The string to format</param>
+		/// <returns>The formatted string</returns>
 		public string ToString(string format)
 		{
 			var sb = new StringBuilder();
@@ -243,12 +244,11 @@ namespace UnityEditor.ProGrids
 		}
 
 		/// <summary>
-		/// Create a VersionInfo type from a string formatted in valid semantic versioning format.
-		/// https://semver.org/
-		/// Ex: TryGetVersionInfo("2.5.3-b.1", out info)
+		/// Creates a VersionInfo type from a string formatted in [valid semantic versioning format](https://semver.org/).
+		/// For example: TryGetVersionInfo("2.5.3-b.1", out info)
 		/// </summary>
-		/// <param name="input"></param>
-		/// <param name="version"></param>
+		/// <param name="input">String that contains the version information</param>
+		/// <param name="version">The variable to write the VersionInfo to. </param>
 		/// <returns></returns>
 		public static bool TryGetVersionInfo(string input, out SemVer version)
 		{

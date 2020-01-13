@@ -33,6 +33,9 @@ namespace UnityEditor.ProGrids
 		public const string AngleValue = "pg_Editor::AngleValue";
 		public const string SnapSettings = "ProGridsEditor::m_SnapSettings";
 
+		public const string ToggleAxisConstraint = "ProGrids::ToggleAxisConstraint";
+		public const string ToggleDisable = "ProGrids::ToggleDisable";
+
 		// do not delete these
 		public const string UnityMoveSnapX = "MoveSnapX";
 		public const string UnityMoveSnapY = "MoveSnapY";
