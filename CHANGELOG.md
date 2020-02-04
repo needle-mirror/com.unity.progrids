@@ -5,13 +5,21 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [3.0.3-preview.6] - 2020-02-05
+
+### Bug Fixes
+
+- Fix a bug where ProBuilder could still snap movement after closing ProGrids.
+
 ## [3.0.3-preview.5] - 2020-01-14
+
+### Bug Fixes
 
 - Fix warnings with Unity 2019.3.
 
 ## [3.0.3-preview.4] - 2019-01-23
 
-## Bug Fixes
+### Bug Fixes
 
 - Fix grid not rendering in SRP projects.
 - Fix ProBuilder still applying snap values when ProGrids is closed.

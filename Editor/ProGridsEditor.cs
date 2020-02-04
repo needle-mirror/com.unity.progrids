@@ -488,6 +488,7 @@ namespace UnityEditor.ProGrids
 			foreach (Action<bool> listener in toolbarEventSubscribers)
 				listener(false);
 			EditorUtility.SetUnityGridEnabled(true);
+			s_Instance = null;
 			SceneView.RepaintAll();
 		}
 
@@ -983,7 +984,7 @@ namespace UnityEditor.ProGrids
 		internal float GetSnapValue() { return SnapValueInUnityUnits; }
 
 		/// <summary>
-		/// Gets of useAxisConstraints, accounting for the shortcut key toggle. 
+		/// Gets of useAxisConstraints, accounting for the shortcut key toggle.
 		/// </summary>
 		/// <returns>the value of useAxisConstraints, accounting for the shortcut key toggle.</returns>
 		/// <remarks>Used by ProBuilder.</remarks>
